@@ -1,0 +1,83 @@
+# Build results
+bin/
+obj/
+out/
+Debug/
+Release/
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider files
+.idea/
+*.sln.iml
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Mono auto-generated files
+*.pidb
+*.booproj
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Visual Studio Code
+.vscode/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userprefs
+
+# Backup & Temp files
+*.bak
+*.tmp
+*.temp
+*.log
+
+# DotCover
+*.dotCover
+
+# StyleCop
+StyleCopReport.xml
+
+# MSTest test results
+TestResults/
+*.trx
+
+# NCrunch
+*.ncrunch*
+.*crunch*.local.xml
+
+# Coverage Results
+*.coverage
+*.coveragexml
