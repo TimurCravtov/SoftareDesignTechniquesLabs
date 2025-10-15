@@ -16,26 +16,10 @@ namespace Laboratory.Characters
             _height = type.Sprite.Length;
         }
 
+        // no per-frame update for player
         public override void Update()
         {
           
-        }
-
-        public (Point position, char symbol) GetArrow(char direction)
-        {
-            int arrowX = Position.X;
-            int arrowY = Position.Y;
-            char arrow = ' ';
-
-            switch (direction)
-            {
-                case 'H': arrow = '<'; arrowX--; break;
-                case 'J': arrow = 'v'; arrowY += _height; break;
-                case 'K': arrow = '^'; arrowY--; break;
-                case 'U': arrow = '>'; arrowX += _width; break;
-            }
-
-            return (new Point(arrowX, arrowY), arrow);
         }
     }
 }

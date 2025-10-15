@@ -2,13 +2,13 @@ using System;
 using System.Drawing;
 using Laboratory.Reports;
 
-namespace Laboratory.Characters
+namespace Laboratory.Characters.Enemies
 {
-    public class RobotEntity : GameEntity
+    public class RobotEntity : GameEntity, IRemovable
     {
         private int _moveCounter = 0;
         private readonly int _moveDelay;
-        private readonly GameEntity _target;
+        private readonly GameEntity? _target;
         private readonly Random _rnd = new Random();
 
         public RobotEntity(CharacterType type, Point position, GameEntity target = null, int moveDelay = 4)
@@ -18,12 +18,22 @@ namespace Laboratory.Characters
             _moveDelay = moveDelay;
         }
 
-        // Polymorphic update method for movement logic
+        public bool ShouldBeRemoved { get; private set; } = false;
+
+        public void Remove()
+        {
+            ShouldBeRemoved = true;
+        }
+
         public override void Update()
         {
             _moveCounter++;
-            if (_moveCounter < _moveDelay) return;
-            _moveCounter = 0;
+            if (_moveCounter % _moveDelay != 0) return;
+            if (_moveCounter == _moveDelay * 20 )
+            {
+                Remove();
+                return;
+            }
 
             if (_target != null)
             {
