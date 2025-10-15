@@ -9,4 +9,4 @@ The laboratory works in the end will form a console game.
 Implements 3 principles from SOLID.
 
 [Report](Reports/REPORT1.md)
-
+ 
