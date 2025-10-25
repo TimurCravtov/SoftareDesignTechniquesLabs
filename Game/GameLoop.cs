@@ -1,3 +1,4 @@
+using Laboratory.Audio;
 using Laboratory.InputController;
 
 namespace Laboratory.Game;
@@ -25,13 +26,17 @@ public class GameLoop
     {
         Console.CursorVisible = false;
         Console.Clear();
-
+        
+        AudioManager.Instance.PlayBackgroundMusic("my-universe-147152.mp3");
+        
         while (true)
         {
             HandleInput();
             UpdateEntities();
             RenderEntities();
             Thread.Sleep(100);
+            
+            if (DateTime.Now.Second % 3 == 0) AudioManager.Instance.PlayAudioEffect("laser-45816.mp3");
         }
     }
 
