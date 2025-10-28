@@ -1,4 +1,4 @@
-using Laboratory.Audio;
+using System.Drawing;
 using Laboratory.InputController;
 
 namespace Laboratory.Game;
@@ -26,17 +26,13 @@ public class GameLoop
     {
         Console.CursorVisible = false;
         Console.Clear();
-        
-        AudioManager.Instance.PlayBackgroundMusic("my-universe-147152.mp3");
-        
+
         while (true)
         {
             HandleInput();
             UpdateEntities();
             RenderEntities();
-            Thread.Sleep(100);
-            
-            if (DateTime.Now.Second % 3 == 0) AudioManager.Instance.PlayAudioEffect("laser-45816.mp3");
+            Thread.Sleep(16);
         }
     }
 
@@ -53,9 +49,12 @@ public class GameLoop
 
     private void UpdateEntities()
     {
-        foreach (var entity in _entities)
+        // Iterate over a snapshot to allow entities to add/remove items from the
+        // main list during their Update() without causing an InvalidOperationException.
+        var snapshot = _entities.ToArray();
+        foreach (var entity in snapshot)
             entity.Update();
-        
+
         RemoveEntities();
     }
 

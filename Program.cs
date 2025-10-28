@@ -17,15 +17,25 @@ namespace Laboratory
 
             var robotType = new CharacterType(10, [".\\", "\\_/"], "Robot");
             var playerType = new CharacterType(20, ["(o-o)", " /П\\", "  л"], "Player");
-
+            
+            
             var entityRenderer = new EntityRenderer();
 
             var player = new Player(playerType, new Point(10, 10));
-            var robot1 = new RobotEntity(robotType, new Point(5, 5), player);
 
-            List<GameEntity> entities = [player, robot1];
+            // create enemies directly
+            var robot1 = new MrBob(robotType, new Point(5, 5), player);
 
-            var playerController = new PlayerController(player);
+            List<GameEntity> entities = new() { player, robot1 };
+
+            // add a RandomShooterEnemy (UngaBunga) that moves randomly and shoots symbols
+            var shooterType = new CharacterType(8, ["(x-x)"], "Shooter");
+            var shooter = new UngaBunga(shooterType, new Point(15, 5), entities);
+            entities.Add(shooter);
+
+            var bulletPool = new Laboratory.GameEntities.Ammo.BulletPoolManager();
+
+            var playerController = new PlayerController(player, entities, bulletPool);
 
             // GameMap map = new(40, 20);
             // new MapRenderer(map).Draw();

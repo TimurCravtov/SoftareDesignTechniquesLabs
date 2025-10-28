@@ -11,19 +11,26 @@ public class BulletPoolManager: IBulletPoolManager
         {
             Bullet bullet = new Bullet();
             bullet.Deactivate();
+            // ensure pool callback returns bullet back here
+            bullet.ReturnToPool = ReturnBullet;
             _bulletPool.Enqueue(bullet);
         }        
     }
     
     public Bullet GetBullet()
     {
-        return _bulletPool.Count > 0 ? _bulletPool.Dequeue() : new Bullet();
+        var b = _bulletPool.Count > 0 ? _bulletPool.Dequeue() : new Bullet();
+        // wire return callback for newly created bullets
+        b.ReturnToPool = ReturnBullet;
+        return b;
     }
     
     public void ReturnBullet(Bullet bullet)
     {
         if (_bulletPool.Count < POOL_SIZE) 
         {
+            // reset state
+            bullet.Position = new System.Drawing.Point(-1, -1);
             _bulletPool.Enqueue(bullet);
         }
     }

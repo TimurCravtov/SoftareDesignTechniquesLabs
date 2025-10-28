@@ -4,14 +4,14 @@ using Laboratory.Reports;
 
 namespace Laboratory.Characters.Enemies
 {
-    public class RobotEntity : GameEntity, IRemovable
+    public class MrBob : GameEntity, IRemovable, IEnemy
     {
         private int _moveCounter = 0;
         private readonly int _moveDelay;
         private readonly GameEntity? _target;
         private readonly Random _rnd = new Random();
 
-        public RobotEntity(CharacterType type, Point position, GameEntity target = null, int moveDelay = 4)
+        public MrBob(CharacterType type, Point position, GameEntity target = null, int moveDelay = 4)
             : base(type, position)
         {
             _target = target;

@@ -1,3 +1,4 @@
+using System.Drawing;
 using Laboratory.Game;
 
 namespace Laboratory.Renderer;
