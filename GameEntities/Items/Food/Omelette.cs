@@ -3,7 +3,7 @@ using Laboratory.Characters;
 
 namespace Laboratory.GameEntities.Items.Food
 {
-    public class Omelette : IFood
+    public class Omelette : IFood, IRenderableItem
     {
         public string Name => "Omelette";
         public string[] Sprite => new[] { "🍳" };

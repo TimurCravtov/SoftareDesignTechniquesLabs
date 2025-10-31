@@ -3,7 +3,7 @@ using Laboratory.Characters;
 
 namespace Laboratory.GameEntities.Items.Powerup
 {
-    public class ElectricGuitar : IPowerup
+    public class ElectricGuitar : IPowerup, IRenderableItem
     {
         public string Name => "Electric Guitar";
         public string[] Sprite => new[] { "🎸" };

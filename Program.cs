@@ -23,10 +23,9 @@ namespace Laboratory
             Console.SetWindowSize(width, height);
             Console.SetBufferSize(width, height);
 
-            var robotType = new CharacterType(10, [".\\", "\\_/"], "Robot");
-            var playerType = new CharacterType(5, ["(o-o)", " /П\\", "  л"], "Player");
-            
-            
+            var robotType = new CharacterType(10, new[] { ".\\", "\\_/" }, "Robot");
+            var playerType = new CharacterType(5, new[] { "(o-o)", " /П\\", "  л" }, "Player");
+
             var entityRenderer = new EntityRenderer();
 
             var itemFactory = new SciFiItemFactory();
@@ -34,26 +33,30 @@ namespace Laboratory
             var menuRenderer = new ConsoleMenuRenderer();
 
             var player = new Player(playerType, new Point(10, 10));
-
             // register player in global GameState so UI/menu renderers can access HP
             GameState.Instance.SetPlayer(player);
 
-            // create enemies directly
-            var robot1 = new MrBob(robotType, new Point(5, 5), player);
+            // Create the map and level builder/director
+            var map = new GameMap(width, height);
+            var builder = new GameLevelBuilder()
+                .SetFactory(itemFactory)
+                .SetMap(map)
+                .SetPlayer(player);
 
-            List<GameEntity> entities = new() { player, robot1 };
+            var director = new LevelDirector();
 
-            // add a RandomShooterEnemy (UngaBunga) that moves randomly and shoots symbols
-            var shooterType = new CharacterType(8, ["👻"], "Shooter");
-            var shooter = new UngaBunga(shooterType, new Point(15, 5), entities);
+            // Optionally create an initial enemy (MrBob) and provide it to the director.
+            var robot1 = new MrBob(robotType, new Point(0, 0), player);
+
+            var entities = director.BuildLevel(builder, new[] { robot1 });
+            var shooterType = new CharacterType(8, new[] { "👻" }, "Shooter");
+            var shooter = new UngaBunga(shooterType, new Point(0, 0), entities);
+            
             entities.Add(shooter);
 
             var bulletPool = new BulletPoolManager();
 
             var playerController = new PlayerController(player, entities, bulletPool);
-
-            // GameMap map = new(40, 20);
-            // new MapRenderer(map).Draw();
 
             var gameLoop = new GameLoop(entities, entityRenderer, playerController, menu, menuRenderer);
             gameLoop.Run();

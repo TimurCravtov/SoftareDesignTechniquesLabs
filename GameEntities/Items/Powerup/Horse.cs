@@ -3,7 +3,7 @@ using Laboratory.Characters;
 
 namespace Laboratory.GameEntities.Items.Powerup
 {
-    public class Horse : IPowerup
+    public class Horse : IPowerup, IRenderableItem
     {
         public string Name => "Horse";
         public string[] Sprite => new[] { "🐎" };
