@@ -14,12 +14,16 @@ public class GameLoop
     private readonly List<GameEntity> _entities;
     private readonly EntityRenderer _renderer;
     private readonly PlayerController _playerController;
+    private readonly Laboratory.Renderer.MenuToRender? _menu;
+    private readonly Laboratory.Renderer.IMenuRenderer? _menuRenderer;
 
-    public GameLoop(List<GameEntity> entities, EntityRenderer renderer, PlayerController playerController)
+    public GameLoop(List<GameEntity> entities, EntityRenderer renderer, PlayerController playerController, Laboratory.Renderer.MenuToRender? menu = null, Laboratory.Renderer.IMenuRenderer? menuRenderer = null)
     {
         _entities = entities;
         _renderer = renderer;
         _playerController = playerController;
+        _menu = menu;
+        _menuRenderer = menuRenderer;
     }
 
     public void Run()
@@ -83,6 +87,12 @@ public class GameLoop
         foreach (var entity in _entities)
         {
             _renderer.Draw(entity);
+        }
+
+        // Draw UI overlay (hearts/menu) on top of entities
+        if (_menu != null && _menuRenderer != null)
+        {
+            _menuRenderer.Render(_menu);
         }
     }
 

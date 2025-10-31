@@ -4,5 +4,4 @@ namespace Laboratory.Characters.Enemies;
 
 public interface IEnemy: IPerTickActioner
 {
-    
 }

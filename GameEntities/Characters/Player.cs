@@ -8,12 +8,14 @@ namespace Laboratory.Characters
     {
         private readonly int _width;
         private readonly int _height;
+        public int Health { get; set; }
 
         public Player(CharacterType type, Point position)
             : base(type, position)
         {
             _width = 5;  // width of sprite
             _height = type.Sprite.Length;
+            Health = type.BaseHealth;
         }
 
         // no per-frame update for player
