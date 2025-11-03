@@ -36,7 +36,7 @@ public class GameLoop
             HandleInput();
             UpdateEntities();
             RenderEntities();
-            Thread.Sleep(16);
+            Thread.Sleep(50);
         }
     }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Collections.Generic;
 using Laboratory.Reports;
 using Laboratory.Game;
 
@@ -14,19 +13,17 @@ namespace Laboratory.Characters.Enemies
     private int _shootCounter = 0;
     private readonly int _minShootDelay;
     private readonly int _maxShootDelay;
-    private readonly List<GameEntity> _entities;
 
         private bool _shouldBeRemoved = false;
 
     private static readonly char[] _projectileSymbols = new[] {'@', '#', '$', '%', '&'};
 
-        public UngaBunga(CharacterType type, Point position, List<GameEntity> entities, int moveDelay = 10, int minShootDelay = 6, int maxShootDelay = 20)
+        public UngaBunga(CharacterType type, Point position, int moveDelay = 10, int minShootDelay = 6, int maxShootDelay = 20)
             : base(type, position)
         {
             _moveDelay = Math.Max(1, moveDelay);
             _minShootDelay = Math.Max(1, minShootDelay);
             _maxShootDelay = Math.Max(_minShootDelay, maxShootDelay);
-            _entities = entities ?? throw new ArgumentNullException(nameof(entities));
 
             // randomize initial shoot counter so enemies don't all shoot in sync
             _shootCounter = _rnd.Next(_minShootDelay, _maxShootDelay + 1);
@@ -76,8 +73,7 @@ namespace Laboratory.Characters.Enemies
             // spawn projectile just adjacent to the enemy and add it to the main entities list
             var start = new Point(Position.X + dx, Position.Y + dy);
             var projectile = new Projectile(new string(new[] { symbol }), start, dx, dy);
-
-            _entities.Add(projectile);
+            EntityManager.Instance.Add(projectile);
         }
 
         /// <summary>

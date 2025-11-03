@@ -20,6 +20,12 @@ namespace Laboratory.Game
         private InGameItemFactory? _factory;
         private readonly Random _rand = new();
 
+        public GameLevelBuilder()
+        {
+            // Bind global EntityManager to the builder's entity list so additions are shared
+            EntityManager.Instance.Initialize(_entities);
+        }
+
         public ILevelBuilder SetFactory(InGameItemFactory factory)
         {
             _factory = factory;
@@ -50,7 +56,7 @@ namespace Laboratory.Game
             {
                 var pos = GetFreePosition();
                 ge.Position = pos;
-                _entities.Add(ge);
+                EntityManager.Instance.Add(ge);
             }
             else
             {
@@ -77,10 +83,9 @@ namespace Laboratory.Game
                 var type = new CharacterType(0, sprite, name);
                 var pos = GetFreePosition();
                 var itemEntity = new ItemEntity(type, pos, renderable);
-                _entities.Add(itemEntity);
+                EntityManager.Instance.Add(itemEntity);
             }
 
-            // Place powerups
             for (int i = 0; i < powerupCount; i++)
             {
                 var powerup = _factory.CreatePowerup();
@@ -89,7 +94,7 @@ namespace Laboratory.Game
                 var type = new CharacterType(0, sprite, name);
                 var pos = GetFreePosition();
                 var itemEntity = new ItemEntity(type, pos, renderable);
-                _entities.Add(itemEntity);
+                EntityManager.Instance.Add(itemEntity);
             }
 
             return this;
@@ -117,7 +122,6 @@ namespace Laboratory.Game
             return new Point(x, y);
         }
 
-        // Use the IRenderableItem abstraction when available to extract display data.
         private static (string[] sprite, string name) ExtractSpriteAndName(object item)
         {
             if (item is Laboratory.GameEntities.Items.IRenderableItem ri)
@@ -129,7 +133,6 @@ namespace Laboratory.Game
             return (new[] { "?" }, item.GetType().Name);
         }
 
-        // Simple wrapper for items that do not implement IRenderableItem.
         private class AnonymousRenderableItem : Laboratory.GameEntities.Items.IRenderableItem
         {
             public string Name { get; }

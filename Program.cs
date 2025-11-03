@@ -49,10 +49,13 @@ namespace Laboratory
             var robot1 = new MrBob(robotType, new Point(0, 0), player);
 
             var entities = director.BuildLevel(builder, new[] { robot1 });
+
+            // Initialize global entity manager with the same list reference
+            EntityManager.Instance.Initialize(entities);
+
             var shooterType = new CharacterType(8, new[] { "👻" }, "Shooter");
-            var shooter = new UngaBunga(shooterType, new Point(0, 0), entities);
-            
-            entities.Add(shooter);
+            var shooter = new UngaBunga(shooterType, new Point(0, 0));
+            EntityManager.Instance.Add(shooter);
 
             var bulletPool = new BulletPoolManager();
 
