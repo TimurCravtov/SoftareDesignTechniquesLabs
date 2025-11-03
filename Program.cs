@@ -28,11 +28,15 @@ namespace Laboratory
 
             var entityRenderer = new EntityRenderer();
 
-            var itemFactory = new SciFiItemFactory();
+            var itemFactory = new MedievalItemFactory();
             var menu = itemFactory.CreateMenuToRender();
             var menuRenderer = new ConsoleMenuRenderer();
 
             var player = new Player(playerType, new Point(10, 10));
+            
+            
+            player.Health = 2; // SET ONLY TO DEMONSTRATE NUTRITION USE
+            
             // register player in global GameState so UI/menu renderers can access HP
             GameState.Instance.SetPlayer(player);
 
@@ -59,7 +63,7 @@ namespace Laboratory
 
             var bulletPool = new BulletPoolManager();
 
-            var playerController = new PlayerController(player, entities, bulletPool);
+            var playerController = new PlayerController(player, entities, bulletPool, entityRenderer);
 
             var gameLoop = new GameLoop(entities, entityRenderer, playerController, menu, menuRenderer);
             gameLoop.Run();

@@ -18,6 +18,11 @@ namespace Laboratory.Characters
             Health = type.BaseHealth;
         }
 
+        public void Heal(int amount)
+        {
+            Health += amount;
+        }
+
         // no per-frame update for player
         public override void Update()
         {

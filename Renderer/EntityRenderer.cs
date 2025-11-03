@@ -35,6 +35,7 @@ namespace Laboratory.Renderer
                 int padding = (spriteWidth - line.Length) / 2;
                 Console.Write(new string(' ', padding) + line + new string(' ', spriteWidth - line.Length - padding));
             }
+
         }
 
         public void Erase(GameEntity entity)

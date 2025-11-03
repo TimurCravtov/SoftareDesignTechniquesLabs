@@ -1,5 +1,7 @@
 using System;
 using Laboratory.Characters;
+using Laboratory.Game;
+using Laboratory.Game.Effects;
 
 namespace Laboratory.GameEntities.Items.Powerup
 {
@@ -7,12 +9,12 @@ namespace Laboratory.GameEntities.Items.Powerup
     {
         public string Name => "Horse";
         public string[] Sprite => new[] { "🐎" };
-        public int Duration => 30; 
+        public int Duration => 70; 
         
         public void Use(GameEntity user)
         {
-            // speed++
-            // no direct console output; effects should be reflected in game state and drawn by renderer
+            // Apply speed boost via effect system
+            StatusEffectManager.Instance.AddEffect(user, new SpeedBoostEffect(Duration, extraSteps: 1));
         }
     }
 }

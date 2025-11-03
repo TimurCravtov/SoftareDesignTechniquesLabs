@@ -7,8 +7,7 @@ public class MedievalItemFactory : InGameItemFactory
 {
     public override IPowerup CreatePowerup()
     {
-        // Medieval theme: keep ElectricGuitar as a quirky medieval lute replacement
-        return new ElectricGuitar();
+        return new Horse();
     }
 
     public override IFood CreateFood()

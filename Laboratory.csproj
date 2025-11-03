@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <Folder Include="Audio\AudioAssets\" />
+      <Folder Include="GameEntities\Action\" />
       <Folder Include="Map\" />
     </ItemGroup>
 

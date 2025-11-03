@@ -1,5 +1,7 @@
 using System;
 using Laboratory.Characters;
+using Laboratory.Game;
+using Laboratory.Game.Effects;
 
 namespace Laboratory.GameEntities.Items.Powerup
 {
@@ -7,11 +9,12 @@ namespace Laboratory.GameEntities.Items.Powerup
     {
         public string Name => "Electric Guitar";
         public string[] Sprite => new[] { "🎸" };
-        public int Duration => 20; // ticks
+        public int Duration => 60; // ticks
 
         public void Use(GameEntity user)
         {
-            // gives a shield (no direct console output; rendering should be handled by renderers)
+            // Grant shield effect via effect system
+            StatusEffectManager.Instance.AddEffect(user, new ShieldEffect(Duration));
         }
     }
 }

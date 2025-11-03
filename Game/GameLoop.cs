@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Laboratory.Characters;
 using Laboratory.Renderer;
+using Laboratory.Game.Effects;
 
 public class GameLoop
 {
@@ -16,6 +17,8 @@ public class GameLoop
     private readonly PlayerController _playerController;
     private readonly Laboratory.Renderer.MenuToRender? _menu;
     private readonly Laboratory.Renderer.IMenuRenderer? _menuRenderer;
+    private readonly CollisionDetector _collisionDetector = new();
+    private readonly Laboratory.Renderer.StatusOverlayRenderer _statusOverlay = new();
 
     public GameLoop(List<GameEntity> entities, EntityRenderer renderer, PlayerController playerController, Laboratory.Renderer.MenuToRender? menu = null, Laboratory.Renderer.IMenuRenderer? menuRenderer = null)
     {
@@ -35,7 +38,10 @@ public class GameLoop
         {
             HandleInput();
             UpdateEntities();
+            _collisionDetector.Tick();
+            StatusEffectManager.Instance.TickAll();
             RenderEntities();
+            _statusOverlay.DrawOverlays();
             Thread.Sleep(50);
         }
     }

@@ -1,3 +1,5 @@
+using Laboratory.GameEntities.Items.Powerup;
+
 namespace Laboratory.GameEntities.Items;
 
 public abstract class InGameItemFactory

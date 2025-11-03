@@ -108,6 +108,21 @@ namespace Laboratory.Characters.Enemies
                 if (Position.X < 0 || Position.Y < 0 || Position.X >= Console.BufferWidth || Position.Y >= Console.BufferHeight)
                 {
                     _shouldBeRemoved = true;
+                    return;
+                }
+
+                // check overlaps at new position (simple hit detection)
+                var overlaps = Collision.QueryOverlapsAt(Position, this);
+                if (overlaps.Count > 0)
+                {
+                    for (int i = 0; i < overlaps.Count; i++)
+                    {
+                        if (overlaps[i] is IRemovable r)
+                        {
+                            r.Remove();
+                        }
+                    }
+                    _shouldBeRemoved = true;
                 }
             }
         }

@@ -5,6 +5,7 @@ using Laboratory.Characters;
 using Laboratory.GameEntities;
 using Laboratory.GameEntities.Ammo;
 using Laboratory.InputController;
+using Laboratory.Game.Effects;
 
 namespace Laboratory.InputController
 {
@@ -13,12 +14,14 @@ namespace Laboratory.InputController
         private readonly Player _player;
         private readonly List<GameEntity> _entities;
         private readonly IBulletPoolManager _bulletPool;
+        private readonly Laboratory.Renderer.EntityRenderer _renderer;
 
-        public PlayerController(Player player, List<GameEntity> entities, IBulletPoolManager bulletPool)
+        public PlayerController(Player player, List<GameEntity> entities, IBulletPoolManager bulletPool, Laboratory.Renderer.EntityRenderer renderer)
         {
             _player = player;
             _entities = entities;
             _bulletPool = bulletPool;
+            _renderer = renderer;
         }
 
         public void HandleInput(ConsoleKey key)
@@ -59,20 +62,26 @@ namespace Laboratory.InputController
 
         private void ExecuteAction(PlayerAction action)
         {
-            switch (action)
+            int steps = 1 + StatusEffectManager.Instance.GetExtraSteps(_player);
+            for (int i = 0; i < steps; i++)
             {
-                case PlayerAction.MoveUp:
-                    _player.Position = new Point(_player.Position.X, _player.Position.Y - 1);
-                    break;
-                case PlayerAction.MoveDown:
-                    _player.Position = new Point(_player.Position.X, _player.Position.Y + 1);
-                    break;
-                case PlayerAction.MoveLeft:
-                    _player.Position = new Point(_player.Position.X - 1, _player.Position.Y);
-                    break;
-                case PlayerAction.MoveRight:
-                    _player.Position = new Point(_player.Position.X + 1, _player.Position.Y);
-                    break;
+                switch (action)
+                {
+                    case PlayerAction.MoveUp:
+                        _player.Position = new Point(_player.Position.X, _player.Position.Y - 1);
+                        break;
+                    case PlayerAction.MoveDown:
+                        _player.Position = new Point(_player.Position.X, _player.Position.Y + 1);
+                        break;
+                    case PlayerAction.MoveLeft:
+                        _player.Position = new Point(_player.Position.X - 1, _player.Position.Y);
+                        break;
+                    case PlayerAction.MoveRight:
+                        _player.Position = new Point(_player.Position.X + 1, _player.Position.Y);
+                        break;
+                }
+                // Erase the tile we just left to avoid trails during speed boost multi-steps
+                _renderer.Erase(_player);
             }
         }
 
