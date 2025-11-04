@@ -45,6 +45,30 @@ namespace Laboratory.Game
             _entities.Insert(0, player);
             return this;
         }
+        
+        public ILevelBuilder AddPowerup(int powerupCount)
+        {
+            if (_factory == null)
+                throw new InvalidOperationException("Factory must be provided before placing items.");
+            if (_map == null)
+                throw new InvalidOperationException("Map must be set before placing items.");
+
+            for (int i = 0; i < powerupCount; i++)
+            {
+                var powerup = _factory.CreatePowerup();
+                var renderable = powerup as IRenderableItem
+                                 ?? throw new InvalidOperationException("Power-up must implement IRenderableItem.");
+
+                var (sprite, name) = ExtractSpriteAndName(renderable);
+                var type = new CharacterType(0, sprite, name);
+                var pos  = GetFreePosition();
+
+                var itemEntity = new ItemEntity(type, pos, renderable);
+                EntityManager.Instance.Add(itemEntity);
+            }
+
+            return this;
+        }
 
         public ILevelBuilder AddEnemy(Laboratory.Characters.Enemies.IEnemy enemy)
         {
@@ -67,6 +91,27 @@ namespace Laboratory.Game
             return this;
         }
 
+        public ILevelBuilder AddFood(int foodCount)
+        {
+            if (_factory == null)
+                throw new InvalidOperationException("Factory must be provided before placing items.");
+            if (_map == null)
+                throw new InvalidOperationException("Map must be set before placing items.");
+
+            for (int i = 0; i < foodCount; i++)
+            {
+                var food = _factory.CreateFood();
+                var renderable = food as IRenderableItem;
+                var (sprite, name) = ExtractSpriteAndName(renderable);
+                var type = new CharacterType(0, sprite, name);
+                var pos = GetFreePosition();
+                var itemEntity = new ItemEntity(type, pos, renderable);
+                EntityManager.Instance.Add(itemEntity);
+            }
+
+            return this;
+        }
+        
         public ILevelBuilder PlaceItems(int foodCount, int powerupCount)
         {
             if (_map == null)
@@ -78,7 +123,7 @@ namespace Laboratory.Game
             for (int i = 0; i < foodCount; i++)
             {
                 var food = _factory.CreateFood();
-                var renderable = food as IRenderableItem ?? new AnonymousRenderableItem(food.GetType().Name);
+                var renderable = food as IRenderableItem;
                 var (sprite, name) = ExtractSpriteAndName(renderable);
                 var type = new CharacterType(0, sprite, name);
                 var pos = GetFreePosition();
@@ -89,7 +134,7 @@ namespace Laboratory.Game
             for (int i = 0; i < powerupCount; i++)
             {
                 var powerup = _factory.CreatePowerup();
-                var renderable = powerup as IRenderableItem ?? new AnonymousRenderableItem(powerup.GetType().Name);
+                var renderable = powerup as IRenderableItem;
                 var (sprite, name) = ExtractSpriteAndName(renderable);
                 var type = new CharacterType(0, sprite, name);
                 var pos = GetFreePosition();
@@ -122,27 +167,10 @@ namespace Laboratory.Game
             return new Point(x, y);
         }
 
-        private static (string[] sprite, string name) ExtractSpriteAndName(object item)
+        private static (string[] sprite, string name) ExtractSpriteAndName(IRenderableItem item)
         {
-            if (item is Laboratory.GameEntities.Items.IRenderableItem ri)
-            {
-                return (ri.Sprite, ri.Name);
-            }
-
-            // Fallback for unknown types: use type name and a placeholder sprite
-            return (new[] { "?" }, item.GetType().Name);
+            return (item.Sprite, item.Name);
         }
-
-        private class AnonymousRenderableItem : Laboratory.GameEntities.Items.IRenderableItem
-        {
-            public string Name { get; }
-            public string[] Sprite { get; }
-
-            public AnonymousRenderableItem(string name)
-            {
-                Name = name;
-                Sprite = new[] { "?" };
-            }
-        }
+        
     }
 }

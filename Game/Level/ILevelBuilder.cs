@@ -20,6 +20,10 @@ public interface ILevelBuilder
 	// Place a number of food and powerup items
 	ILevelBuilder PlaceItems(int foodCount, int powerupCount);
 
+	ILevelBuilder AddFood(int foodCount);
+	
+	ILevelBuilder AddPowerup(int powerupCount);
+	
 	// Retrieve the built list of entities
 	List<GameEntity> GetResult();
 }

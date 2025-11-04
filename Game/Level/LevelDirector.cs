@@ -15,7 +15,6 @@ public class LevelDirector
                 builder.AddEnemy(e);
         }
 
-        // Default: place items (3 food, 3 powerups)
         builder.PlaceItems(3, 3);
 
         return builder.GetResult();
