@@ -22,7 +22,7 @@ namespace Laboratory
             
             Console.SetWindowSize(width, height);
             Console.SetBufferSize(width, height);
-
+            Thread.Sleep(2000);
             var robotType = new CharacterType(10, new[] { ".\\", "\\_/" }, "Robot");
             var playerType = new CharacterType(5, new[] { "(o-o)", " /П\\", "  л" }, "Player");
 

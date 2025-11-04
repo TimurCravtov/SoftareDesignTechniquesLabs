@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
+using Laboratory.Audio;
 using Laboratory.Characters;
 using Laboratory.GameEntities;
 using Laboratory.GameEntities.Ammo;
@@ -42,21 +43,19 @@ namespace Laboratory.InputController
                 return;
             }
 
-            // Shooting: Arrow keys
-            switch (key)
+            Direction8? dir = key switch
             {
-                case ConsoleKey.UpArrow:
-                    Shoot(Direction8.Up);
-                    break;
-                case ConsoleKey.DownArrow:
-                    Shoot(Direction8.Down);
-                    break;
-                case ConsoleKey.LeftArrow:
-                    Shoot(Direction8.Left);
-                    break;
-                case ConsoleKey.RightArrow:
-                    Shoot(Direction8.Right);
-                    break;
+                ConsoleKey.UpArrow    => Direction8.Up,
+                ConsoleKey.DownArrow  => Direction8.Down,
+                ConsoleKey.LeftArrow  => Direction8.Left,
+                ConsoleKey.RightArrow => Direction8.Right,
+                _                     => null
+            };
+
+            if (dir != null)
+            {
+                Shoot(dir.Value);
+                AudioManager.Instance.PlayLazerShooting();
             }
         }
 

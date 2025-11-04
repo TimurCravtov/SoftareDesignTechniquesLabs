@@ -1,4 +1,5 @@
 using System.Drawing;
+using Laboratory.Audio;
 using Laboratory.InputController;
 
 namespace Laboratory.Game;
@@ -33,7 +34,10 @@ public class GameLoop
     {
         Console.CursorVisible = false;
         Console.Clear();
-
+        
+        IAudioManager audioManager = AudioManager.Instance;
+        audioManager.PlayBackgroundMusic("Private/hearingdamage.mp3");
+        
         while (true)
         {
             HandleInput();

@@ -52,6 +52,11 @@ public class AudioManager: IAudioManager
         }
     }
 
+    public void PlayLazerShooting()
+    {
+        PlayAudioEffect("laser-45816.mp3");
+    }
+
     public void PlayAudioEffect(string filename)
     {
         string projectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\..\.."));
