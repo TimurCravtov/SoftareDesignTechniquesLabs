@@ -23,12 +23,14 @@ namespace Laboratory
             Console.SetWindowSize(width, height);
             Console.SetBufferSize(width, height);
             Thread.Sleep(2000);
+            
             var robotType = new CharacterType(10, new[] { ".\\", "\\_/" }, "Robot");
             var playerType = new CharacterType(5, new[] { "(o-o)", " /П\\", "  л" }, "Player");
+            var shooterType = new CharacterType(8, new[] { "👻" }, "Shooter");
 
             var entityRenderer = new EntityRenderer();
 
-            var itemFactory = new MedievalItemFactory();
+            var itemFactory = new SciFiItemFactory();
             var menu = itemFactory.CreateMenuToRender();
             var menuRenderer = new ConsoleMenuRenderer();
 
@@ -37,30 +39,22 @@ namespace Laboratory
             
             player.Health = 2; // SET ONLY TO DEMONSTRATE NUTRITION USE
             
-            // register player in global GameState so UI/menu renderers can access HP
             GameState.Instance.SetPlayer(player);
 
-            // Create the map and level builder/director
             var map = new GameMap(width, height);
             var builder = new GameLevelBuilder()
                 .SetFactory(itemFactory)
                 .SetMap(map)
-                .SetPlayer(player);
-
+                .SetPlayer(player)
+                .AddFood(4)
+                .AddPowerup(new Random().Next(2, 6))
+                .AddEnemy(new UngaBunga(shooterType, new Point(50, 30)))
+                .AddEnemy(new MrBob(robotType, new Point(40, 40), player));
+                
             var director = new LevelDirector();
-
-            // Optionally create an initial enemy (MrBob) and provide it to the director.
-            var robot1 = new MrBob(robotType, new Point(0, 0), player);
-
-            var entities = director.BuildLevel(builder, new[] { robot1 });
-
-            // Initialize global entity manager with the same list reference
+            var entities = director.BuildLevel(builder);
             EntityManager.Instance.Initialize(entities);
-
-            var shooterType = new CharacterType(8, new[] { "👻" }, "Shooter");
-            var shooter = new UngaBunga(shooterType, new Point(0, 0));
-            EntityManager.Instance.Add(shooter);
-
+            
             var bulletPool = new BulletPoolManager();
 
             var playerController = new PlayerController(player, entities, bulletPool, entityRenderer);

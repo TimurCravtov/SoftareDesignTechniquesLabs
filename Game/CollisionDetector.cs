@@ -18,7 +18,7 @@ public class CollisionDetector
         if (player != null)
         {
             overlaps = GetOverlapsFor(player);
-            // Handle pickups via IPowerup.Use
+
             for (int i = 0; i < overlaps.Count; i++)
             {
                 if (overlaps[i] is Laboratory.GameEntities.Items.ItemEntity item)

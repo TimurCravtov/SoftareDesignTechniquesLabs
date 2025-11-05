@@ -10,8 +10,6 @@ using Laboratory.Reports;
 
 namespace Laboratory.Game
 {
-    // Concrete builder implementing ILevelBuilder. It uses an InGameItemFactory
-    // to create themed items and places enemies and items on the provided map.
     public class GameLevelBuilder : ILevelBuilder
     {
         private readonly List<GameEntity> _entities = new();
@@ -19,12 +17,6 @@ namespace Laboratory.Game
         private Player? _player;
         private InGameItemFactory? _factory;
         private readonly Random _rand = new();
-
-        public GameLevelBuilder()
-        {
-            // Bind global EntityManager to the builder's entity list so additions are shared
-            EntityManager.Instance.Initialize(_entities);
-        }
 
         public ILevelBuilder SetFactory(InGameItemFactory factory)
         {
@@ -41,117 +33,66 @@ namespace Laboratory.Game
         public ILevelBuilder SetPlayer(Player player)
         {
             _player = player;
-            // ensure player is the first entity
             _entities.Insert(0, player);
             return this;
         }
-        
-        public ILevelBuilder AddPowerup(int powerupCount)
+
+        public ILevelBuilder AddEnemy(IEnemy enemy)
         {
-            if (_factory == null)
-                throw new InvalidOperationException("Factory must be provided before placing items.");
-            if (_map == null)
-                throw new InvalidOperationException("Map must be set before placing items.");
+            if (_map == null) throw new InvalidOperationException("Map must be set.");
 
-            for (int i = 0; i < powerupCount; i++)
-            {
-                var powerup = _factory.CreatePowerup();
-                var renderable = powerup as IRenderableItem
-                                 ?? throw new InvalidOperationException("Power-up must implement IRenderableItem.");
+            if (enemy is not GameEntity ge)
+                throw new InvalidOperationException("Enemy must be GameEntity.");
 
-                var (sprite, name) = ExtractSpriteAndName(renderable);
-                var type = new CharacterType(0, sprite, name);
-                var pos  = GetFreePosition();
-
-                var itemEntity = new ItemEntity(type, pos, renderable);
-                EntityManager.Instance.Add(itemEntity);
-            }
-
-            return this;
-        }
-
-        public ILevelBuilder AddEnemy(Laboratory.Characters.Enemies.IEnemy enemy)
-        {
-            if (_map == null)
-                throw new InvalidOperationException("Map must be set before placing enemies.");
-
-            // If the provided enemy is a GameEntity, we can position it and add to the list
-            if (enemy is GameEntity ge)
-            {
-                var pos = GetFreePosition();
-                ge.Position = pos;
-                EntityManager.Instance.Add(ge);
-            }
-            else
-            {
-                // If it's not a GameEntity (unlikely given current code), ignore or throw
-                throw new InvalidOperationException("Enemy must be a GameEntity in this implementation.");
-            }
-
+            ge.Position = GetFreePosition();
+            _entities.Add(ge);
             return this;
         }
 
         public ILevelBuilder AddFood(int foodCount)
         {
-            if (_factory == null)
-                throw new InvalidOperationException("Factory must be provided before placing items.");
-            if (_map == null)
-                throw new InvalidOperationException("Map must be set before placing items.");
+            EnsureFactoryAndMap();
 
             for (int i = 0; i < foodCount; i++)
             {
-                var food = _factory.CreateFood();
-                var renderable = food as IRenderableItem;
+                var food = _factory!.CreateFood();
+                var renderable = (IRenderableItem)food;
                 var (sprite, name) = ExtractSpriteAndName(renderable);
-                var type = new CharacterType(0, sprite, name);
-                var pos = GetFreePosition();
-                var itemEntity = new ItemEntity(type, pos, renderable);
-                EntityManager.Instance.Add(itemEntity);
+                var itemEntity = new ItemEntity(new CharacterType(0, sprite, name), GetFreePosition(), renderable);
+                _entities.Add(itemEntity);
             }
 
             return this;
         }
-        
-        public ILevelBuilder PlaceItems(int foodCount, int powerupCount)
-        {
-            if (_map == null)
-                throw new InvalidOperationException("Map must be set before placing items.");
-            if (_factory == null)
-                throw new InvalidOperationException("Factory must be provided before placing items.");
 
-            // Place food items
-            for (int i = 0; i < foodCount; i++)
-            {
-                var food = _factory.CreateFood();
-                var renderable = food as IRenderableItem;
-                var (sprite, name) = ExtractSpriteAndName(renderable);
-                var type = new CharacterType(0, sprite, name);
-                var pos = GetFreePosition();
-                var itemEntity = new ItemEntity(type, pos, renderable);
-                EntityManager.Instance.Add(itemEntity);
-            }
+        public ILevelBuilder AddPowerup(int powerupCount)
+        {
+            EnsureFactoryAndMap();
 
             for (int i = 0; i < powerupCount; i++)
             {
-                var powerup = _factory.CreatePowerup();
-                var renderable = powerup as IRenderableItem;
+                var powerup = _factory!.CreatePowerup();
+                var renderable = (IRenderableItem)powerup;
                 var (sprite, name) = ExtractSpriteAndName(renderable);
-                var type = new CharacterType(0, sprite, name);
-                var pos = GetFreePosition();
-                var itemEntity = new ItemEntity(type, pos, renderable);
-                EntityManager.Instance.Add(itemEntity);
+                var itemEntity = new ItemEntity(new CharacterType(0, sprite, name), GetFreePosition(), renderable);
+                _entities.Add(itemEntity);
             }
 
+            return this;
+        }
+
+        public ILevelBuilder PlaceItems(int foodCount, int powerupCount)
+        {
+            AddFood(foodCount);
+            AddPowerup(powerupCount);
             return this;
         }
 
         public List<GameEntity> GetResult() => _entities;
 
-        // Helper: pick a random free position inside the map bounds (not on border)
         private Point GetFreePosition()
         {
-            if (_map == null)
-                throw new InvalidOperationException("Map not set");
+            if (_map == null) throw new InvalidOperationException("Map not set");
 
             int x, y;
             int attempts = 0;
@@ -160,17 +101,19 @@ namespace Laboratory.Game
                 x = _rand.Next(1, _map.Width - 1);
                 y = _rand.Next(1, _map.Height - 1);
                 attempts++;
-                if (attempts > 500)
-                    break;
+                if (attempts > 500) break;
             } while (_entities.Any(e => e.Position.X == x && e.Position.Y == y));
 
             return new Point(x, y);
         }
 
         private static (string[] sprite, string name) ExtractSpriteAndName(IRenderableItem item)
+            => (item.Sprite, item.Name);
+
+        private void EnsureFactoryAndMap()
         {
-            return (item.Sprite, item.Name);
+            if (_factory == null) throw new InvalidOperationException("Factory must be provided before placing items.");
+            if (_map == null) throw new InvalidOperationException("Map must be set before placing items.");
         }
-        
     }
 }
