@@ -30,7 +30,7 @@ namespace Laboratory
 
             var entityRenderer = new EntityRenderer();
 
-            var itemFactory = new SciFiItemFactory();
+            var itemFactory = new MedievalItemFactory();
             var menu = itemFactory.CreateMenuToRender();
             var menuRenderer = new ConsoleMenuRenderer();
 

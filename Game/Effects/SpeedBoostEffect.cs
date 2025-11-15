@@ -4,7 +4,7 @@ public class SpeedBoostEffect : ISpeedEffect
 {
     public int RemainingTicks { get; private set; }
     public bool IsActive => RemainingTicks > 0;
-    public string? OverlayIcon => null; // no icon by default
+    public string? OverlayIcon => null;
     public int ExtraSteps { get; }
 
     public SpeedBoostEffect(int durationTicks, int extraSteps = 1)

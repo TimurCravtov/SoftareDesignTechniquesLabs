@@ -1,5 +1,6 @@
 using Laboratory.GameEntities.Items.Food;
 using Laboratory.GameEntities.Items.Powerup;
+using Laboratory.GameEntities.Items.Powerup.Decorators;
 
 namespace Laboratory.GameEntities.Items.Factories;
 
@@ -7,7 +8,7 @@ public class MedievalItemFactory : InGameItemFactory
 {
     public override IPowerup CreatePowerup()
     {
-        return new Horse();
+        return new PowerupPickUpAudioEffectDecorator(new Horse(), "horseffect.mp3");
     }
 
     public override IFood CreateFood()
