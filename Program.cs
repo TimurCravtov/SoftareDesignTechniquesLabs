@@ -24,9 +24,11 @@ namespace Laboratory
             Console.SetBufferSize(width, height);
             Thread.Sleep(2000);
             
-            var robotType = new CharacterType(10, new[] { ".\\", "\\_/" }, "Robot");
-            var playerType = new CharacterType(5, new[] { "(o-o)", " /П\\", "  л" }, "Player");
-            var shooterType = new CharacterType(8, new[] { "👻" }, "Shooter");
+            var characterFactory = new Characters.CharacterFactory();
+
+            var robotType = characterFactory.GetOrCreate("Robot", 10, new[] { ".\\", "\\_/" });
+            var playerType = characterFactory.GetOrCreate("Player", 5, new[] { "(o-o)", " /П\\", "  л" });
+            var shooterType = characterFactory.GetOrCreate("Shooter", 8, new[] { "👻" });
 
             var entityRenderer = new EntityRenderer();
 
